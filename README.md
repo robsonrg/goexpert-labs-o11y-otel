@@ -55,6 +55,45 @@ Entrega
 - Documentação explicando como rodar o projeto em ambiente dev.
 - Utilize docker/docker-compose para que possamos realizar os testes de sua aplicação.
 
----
+# Executando a aplicação
 
-wip
+### Pré-requisitos
+
+- Crie uma chave de API em https://www.weatherapi.com/
+- Insira a chave de API no arquivo `.env`
+
+### Iniciando os serviços
+
+Inicie os containers através do docker compose:
+
+```sh
+docker-compose up -d
+```
+
+- Zipkin (tracing): http://127.0.0.1:9411
+- ZipCodeService: http://localhost:8080/zipcode
+- WeatherService: http://localhost:8081/weather
+
+### Testando endpoints
+
+1. Realize a chamada do serviço A (zipcode)
+
+    ```sh
+    curl --request POST \
+        --url http://localhost:8080/zipcode/ \
+        --header 'Content-Type: application/json' \
+        --data '{"cep":"89036400"}'
+    ```
+
+    Para realizar uma chamada ao serviço B (weather)
+
+    ```sh
+    curl --request GET \
+        --url http://localhost:8081/zipcode/89036400
+    ```
+
+2. Visualizando os trancings
+
+    Após enviar requisições para os serviços, você pode visualizar os traces no Zipkin (http://127.0.0.1:9411). Os spans devem mostrar a sequência de chamadas entre os serviços ZipCodeService e WeatherService.
+
+    ![screenshot_zipkin.png](screenshot_zipkin.png)

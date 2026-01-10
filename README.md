@@ -62,12 +62,14 @@ Entrega
 - Crie uma chave de API em https://www.weatherapi.com/
 - Insira a chave de API no arquivo `.env`
 
+*Para este projeto, já define uma chave no arquivo .env para testes e validação da entrega
+
 ### Iniciando os serviços
 
 Inicie os containers através do docker compose:
 
 ```sh
-docker-compose up -d
+docker compose up -d
 ```
 
 - Zipkin (tracing): http://127.0.0.1:9411

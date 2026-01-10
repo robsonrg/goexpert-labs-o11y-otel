@@ -15,7 +15,9 @@ services:
       - "4317:4317"
 
   zipcode-service:
-    image: golang:latest
+    build:
+      context: .
+      dockerfile: Dockerfile-zipcode
     container_name: zipcode-service
     ports:
       - "8080:8080"
@@ -23,24 +25,18 @@ services:
       - ZIPCODE_SERVICE_PORT=8080
       - WEATHER_SERVICE_PORT=8081
       - WEATHER_SERVICE_HOST=weather
-    volumes:
-      - .:/app
-    command: >
-      sh -c " cd /app && go mod tidy && GOOS=linux CGO_ENABLED=0 go build -ldflags='-w -s' -o ./build/zipcode-service ./cmd/zipcode-service/main.go && ./build/zipcode-service"
     depends_on:
       - zipkin
 
   weather:
-    image: golang:latest
+    build:
+      context: .
+      dockerfile: Dockerfile-weather
     container_name: weather
     ports:
       - "8081:8081"
     environment:
       - WEATHER_SERVICE_PORT=8081
       - WEATHER_API_KEY=${WEATHER_API_KEY}
-    volumes:
-      - .:/app
-    command: >
-      sh -c " cd /app && go mod tidy && GOOS=linux CGO_ENABLED=0 go build -ldflags='-w -s' -o ./build/weather-service ./cmd/weather-service/main.go && ./build/weather-service"
     depends_on:
       - zipkin
